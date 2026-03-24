@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Listings — Orema Global Services</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --gold:#C9A84C; --gold-light:#E8C97A;
+      --dark:#0A0A0A; --dark-2:#111111; --dark-3:#1A1A1A; --dark-4:#222222;
+      --muted:#888; --text:#CCCCCC;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--dark); color:var(--text); overflow-x:hidden; }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events:none; z-index:9999; opacity:.5;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:1000;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1.4rem 5vw; transition:background .4s, backdrop-filter .4s;
+    }
+    nav.scrolled { background:rgba(10,10,10,.9); backdrop-filter:blur(18px); border-bottom:1px solid rgba(201,168,76,.15); }
+    .logo { font-family:'Cormorant Garamond',serif; font-size:1.55rem; font-weight:700; color:#fff; letter-spacing:.05em; text-decoration:none; }
+    .logo span { color:var(--gold); }
+    .nav-links { display:flex; gap:2.2rem; list-style:none; align-items:center; }
+    .nav-links a { font-size:.82rem; letter-spacing:.12em; text-transform:uppercase; color:var(--text); text-decoration:none; position:relative; transition:color .3s; }
+    .nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--gold); transition:width .3s; }
+    .nav-links a:hover { color:var(--gold-light); }
+    .nav-links a:hover::after { width:100%; }
+    .nav-links a.active { color:var(--gold); }
+    .nav-links a.active::after { width:100%; }
+    .nav-cta { background:var(--gold)!important; color:var(--dark)!important; padding:.55rem 1.4rem; font-weight:500; }
+    .nav-cta::after { display:none!important; }
+    .nav-cta:hover { background:var(--gold-light)!important; }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none; }
+    .hamburger span { display:block; width:24px; height:1.5px; background:#fff; transition:.3s; }
+
+    /* MOBILE MENU */
+    .mobile-menu { display:none; position:fixed; inset:0; background:rgba(10,10,10,.97); backdrop-filter:blur(20px); z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:2rem; }
+    .mobile-menu.open { display:flex; }
+    .mobile-menu a { font-family:'Cormorant Garamond',serif; font-size:2rem; color:#fff; text-decoration:none; transition:color .3s; }
+    .mobile-menu a:hover { color:var(--gold-light); }
+    .mobile-close { position:absolute; top:1.5rem; right:5vw; font-size:1.8rem; color:var(--gold); cursor:pointer; background:none; border:none; }
+
+    /* ── PAGE HERO ── */
+    .page-hero { height:52vh; min-height:360px; position:relative; display:flex; align-items:flex-end; padding:0 5vw 4rem; overflow:hidden; }
+    .page-hero-bg {
+      position:absolute; inset:0;
+      background: linear-gradient(to bottom,rgba(0,0,0,.35) 0%,rgba(0,0,0,.75) 100%),
+                  url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1800&q=80') center/cover no-repeat;
+    }
+    .page-hero-grid {
+      position:absolute; inset:0;
+      background-image: linear-gradient(rgba(201,168,76,.05) 1px,transparent 1px), linear-gradient(90deg,rgba(201,168,76,.05) 1px,transparent 1px);
+      background-size:80px 80px;
+    }
+    .page-hero-content { position:relative; z-index:1; animation:fadeUp .8s .2s both; }
+    .breadcrumb { display:flex; align-items:center; gap:.6rem; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:1rem; }
+    .breadcrumb a { color:var(--gold); text-decoration:none; }
+    .breadcrumb a:hover { color:var(--gold-light); }
+    .breadcrumb span { color:rgba(255,255,255,.3); }
+    .page-hero-content h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,5vw,4.5rem); font-weight:300; color:#fff; line-height:1.1; }
+    .page-hero-content h1 em { font-style:italic; color:var(--gold-light); }
+    .page-hero-sub { margin-top:.8rem; font-size:.9rem; color:rgba(255,255,255,.6); }
+
+    /* ── CATEGORY TABS ── */
+    .cat-tabs {
+      background:var(--dark-4);
+      border-bottom:1px solid rgba(201,168,76,.15);
+      padding:0 5vw;
+      display:flex;
+      align-items:center;
+      gap:0;
+      position:sticky; top:72px; z-index:60;
+    }
+    .cat-tab {
+      font-family:'DM Sans',sans-serif;
+      font-size:.78rem; letter-spacing:.15em; text-transform:uppercase;
+      padding:1.1rem 2rem;
+      border:none; background:none;
+      color:var(--muted); cursor:pointer;
+      border-bottom:2px solid transparent;
+      transition:.25s;
+      display:flex; align-items:center; gap:.5rem;
+    }
+    .cat-tab:hover { color:var(--gold-light); }
+    .cat-tab.active { color:var(--gold); border-bottom-color:var(--gold); font-weight:500; }
+    .cat-tab-count {
+      background:rgba(201,168,76,.15);
+      color:var(--gold);
+      font-size:.65rem; font-weight:700;
+      padding:.15rem .45rem;
+      border-radius:20px;
+      min-width:20px; text-align:center;
+    }
+    .cat-tab.active .cat-tab-count { background:var(--gold); color:var(--dark); }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      background:var(--dark-3);
+      border-bottom:1px solid rgba(201,168,76,.1);
+      padding:1.2rem 5vw;
+      position:sticky; top:117px; z-index:50;
+    }
+    .filter-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+    .filter-label { font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); white-space:nowrap; }
+    .filter-group { display:flex; gap:.6rem; flex-wrap:wrap; flex:1; }
+
+    /* property sub-filters */
+    .sub-filters-prop, .sub-filters-cars { display:flex; gap:.6rem; flex-wrap:wrap; }
+    .sub-filters-cars { display:none; }
+
+    .filter-btn {
+      font-family:'DM Sans',sans-serif; font-size:.76rem; letter-spacing:.08em; text-transform:uppercase;
+      padding:.42rem 1rem; border:1px solid rgba(201,168,76,.2); background:none;
+      color:var(--muted); cursor:pointer; transition:.25s; white-space:nowrap;
+    }
+    .filter-btn:hover { border-color:var(--gold); color:var(--gold-light); }
+    .filter-btn.active { background:var(--gold); color:var(--dark); border-color:var(--gold); font-weight:500; }
+    .filter-search {
+      display:flex; align-items:center; gap:.5rem;
+      background:rgba(255,255,255,.04); border:1px solid rgba(201,168,76,.15);
+      padding:.42rem 1rem; margin-left:auto;
+    }
+    .filter-search input { background:none; border:none; outline:none; font-family:'DM Sans',sans-serif; font-size:.82rem; color:var(--text); width:180px; }
+    .filter-search input::placeholder { color:var(--muted); }
+    .filter-search span { color:var(--muted); }
+
+    /* ── LISTINGS SECTION ── */
+    #listings { padding:5rem 5vw; background:var(--dark-2); }
+    .listings-meta {
+      max-width:1200px; margin:0 auto 2.5rem;
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+    }
+    .listings-count { font-size:.82rem; color:var(--muted); }
+    .listings-count strong { color:var(--gold); font-weight:500; }
+    .sort-select { font-family:'DM Sans',sans-serif; font-size:.8rem; background:var(--dark-3); border:1px solid rgba(201,168,76,.15); color:var(--text); padding:.45rem 1rem; outline:none; cursor:pointer; }
+    .sort-select option { background:var(--dark-3); }
+
+    .listings-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:1.8rem; }
+
+    /* ── CARD (shared) ── */
+    .item-card { background:var(--dark-3); overflow:hidden; transition:transform .3s; display:flex; flex-direction:column; }
+    .item-card:hover { transform:translateY(-6px); }
+    .item-card.hidden { display:none; }
+    .item-img-wrap { overflow:hidden; position:relative; }
+    .item-img { width:100%; height:240px; object-fit:cover; display:block; filter:brightness(.85); transition:filter .4s,transform .4s; }
+    .item-card:hover .item-img { filter:brightness(1); transform:scale(1.04); }
+
+    /* badges */
+    .item-badge { position:absolute; top:1rem; left:1rem; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; padding:.3rem .7rem; font-weight:500; }
+    .badge-sale  { background:var(--gold); color:var(--dark); }
+    .badge-lease { background:#2a7a6a; color:#fff; }
+    .badge-new   { background:#1a5a8a; color:#fff; }
+    .badge-sold  { background:#555; color:#fff; }
+    .badge-used  { background:#6b4c1e; color:#fff; }
+    .badge-hire  { background:#3a2a7a; color:#fff; }
+
+    .item-tag { position:absolute; bottom:1rem; right:1rem; background:rgba(10,10,10,.7); border:1px solid rgba(201,168,76,.3); color:var(--gold); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; padding:.25rem .6rem; }
+
+    .item-body { padding:1.8rem; display:flex; flex-direction:column; flex:1; }
+    .item-body h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:#fff; margin-bottom:.3rem; font-weight:600; }
+    .item-sub { font-size:.8rem; color:var(--muted); margin-bottom:1rem; }
+    .item-features { display:flex; gap:1.2rem; margin-bottom:1.2rem; flex-wrap:wrap; }
+    .item-feat { font-size:.78rem; color:var(--muted); display:flex; align-items:center; gap:.3rem; }
+    .item-footer { display:flex; align-items:center; justify-content:space-between; margin-top:auto; padding-top:1.2rem; border-top:1px solid rgba(201,168,76,.1); }
+    .item-price { font-family:'Cormorant Garamond',serif; font-size:1.45rem; color:var(--gold); font-weight:600; line-height:1; }
+    .item-price small { font-family:'DM Sans',sans-serif; font-size:.72rem; color:var(--muted); font-weight:400; display:block; margin-top:.2rem; }
+    .item-enquire { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); text-decoration:none; border:1px solid rgba(201,168,76,.3); padding:.45rem .9rem; transition:.25s; }
+    .item-enquire:hover { background:var(--gold); color:var(--dark); }
+
+    /* section divider label */
+    .section-divider {
+      max-width:1200px; margin:3rem auto 2rem;
+      display:flex; align-items:center; gap:1.5rem;
+    }
+    .section-divider h2 { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:300; color:#fff; white-space:nowrap; }
+    .section-divider h2 em { font-style:italic; color:var(--gold-light); }
+    .section-divider-line { flex:1; height:1px; background:linear-gradient(to right,rgba(201,168,76,.3),transparent); }
+
+    /* No results */
+    .no-results { max-width:1200px; margin:0 auto; text-align:center; padding:5rem 0; display:none; }
+    .no-results.show { display:block; }
+    .no-results .nr-icon { font-size:3rem; display:block; margin-bottom:1rem; }
+    .no-results p { color:var(--muted); font-size:.95rem; }
+
+    /* PAGINATION */
+    .pagination { max-width:1200px; margin:3.5rem auto 0; display:flex; align-items:center; justify-content:center; gap:.5rem; }
+    .page-btn { width:40px; height:40px; border:1px solid rgba(201,168,76,.2); background:none; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:.85rem; cursor:pointer; transition:.25s; display:flex; align-items:center; justify-content:center; }
+    .page-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .page-btn.active { background:var(--gold); color:var(--dark); border-color:var(--gold); font-weight:500; }
+
+    /* ── CTA BANNER ── */
+    .cta-banner { background:var(--dark-3); border-top:1px solid rgba(201,168,76,.1); border-bottom:1px solid rgba(201,168,76,.1); padding:5rem 5vw; text-align:center; }
+    .cta-banner > span { font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:.8rem; }
+    .cta-banner h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(1.8rem,3.5vw,3rem); font-weight:300; color:#fff; margin-bottom:1rem; }
+    .cta-banner h2 em { font-style:italic; color:var(--gold-light); }
+    .cta-banner p { color:var(--muted); font-size:.92rem; margin-bottom:2rem; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.7; }
+    .cta-btns { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+    .btn-primary { background:var(--gold); color:var(--dark); padding:.85rem 2.2rem; font-size:.85rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; transition:background .3s,transform .2s; display:inline-block; }
+    .btn-primary:hover { background:var(--gold-light); transform:translateY(-2px); }
+    .btn-ghost { border:1px solid rgba(255,255,255,.25); color:#fff; padding:.85rem 2.2rem; font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; text-decoration:none; transition:border-color .3s,color .3s; display:inline-block; }
+    .btn-ghost:hover { border-color:var(--gold); color:var(--gold-light); }
+
+    /* ── FOOTER ── */
+    footer { background:#050505; border-top:1px solid rgba(201,168,76,.12); padding:4rem 5vw 2rem; }
+    .footer-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:3rem; padding-bottom:3rem; border-bottom:1px solid rgba(255,255,255,.06); }
+    .footer-brand .logo { display:block; margin-bottom:1rem; }
+    .footer-brand p { font-size:.85rem; color:var(--muted); line-height:1.75; max-width:260px; }
+    .footer-col h5 { font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem; }
+    .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:.65rem; }
+    .footer-col ul a { font-size:.85rem; color:var(--muted); text-decoration:none; transition:color .3s; }
+    .footer-col ul a:hover { color:var(--gold-light); }
+    .footer-bottom { max-width:1200px; margin:2rem auto 0; display:flex; justify-content:space-between; font-size:.78rem; color:rgba(136,136,136,.6); flex-wrap:wrap; gap:.5rem; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .6s,transform .6s; }
+    .reveal.visible { opacity:1; transform:none; }
+
+    /* RESPONSIVE */
+    @media(max-width:1024px) { .listings-grid { grid-template-columns:repeat(2,1fr); } .footer-grid { grid-template-columns:1fr 1fr; } }
+    @media(max-width:768px) {
+      .nav-links { display:none; } .hamburger { display:flex; }
+      .listings-grid { grid-template-columns:1fr; }
+      .filter-search { display:none; }
+      .footer-grid { grid-template-columns:1fr 1fr; }
+      .cat-tab { padding:.9rem 1.2rem; font-size:.72rem; }
+    }
+    @media(max-width:480px) { .footer-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="logo">Orema <span>Global</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="properties.html" class="active">Listings</a></li>
+    <li><a href="index.html#testimonials">Testimonials</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Contact Us</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose">✕</button>
+  <a href="index.html#about"        class="mob-link">About</a>
+  <a href="index.html#services"     class="mob-link">Services</a>
+  <a href="properties.html"         class="mob-link">Listings</a>
+  <a href="index.html#testimonials" class="mob-link">Testimonials</a>
+  <a href="index.html#contact"      class="mob-link">Contact</a>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span>/</span>
+      <span style="color:rgba(255,255,255,.7)">Listings</span>
+    </div>
+    <h1>Properties &amp; <em>Automobiles</em></h1>
+    <p class="page-hero-sub">Browse our full portfolio of real estate listings and available vehicles across Nigeria.</p>
+  </div>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="cat-tabs">
+  <button class="cat-tab active" data-cat="all">
+    All Listings <span class="cat-tab-count" id="count-all">18</span>
+  </button>
+  <button class="cat-tab" data-cat="property">
+    🏠 Properties <span class="cat-tab-count" id="count-property">12</span>
+  </button>
+  <button class="cat-tab" data-cat="car">
+    🚗 Automobiles <span class="cat-tab-count" id="count-car">6</span>
+  </button>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <span class="filter-label">Filter:</span>
+
+    <!-- Property sub-filters -->
+    <div class="sub-filters-prop" id="subProp">
+      <button class="filter-btn active" data-sub="all">All</button>
+      <button class="filter-btn" data-sub="sale">For Sale</button>
+      <button class="filter-btn" data-sub="lease">For Lease</button>
+      <button class="filter-btn" data-sub="new">New Listings</button>
+      <button class="filter-btn" data-sub="residential">Residential</button>
+      <button class="filter-btn" data-sub="commercial">Commercial</button>
+      <button class="filter-btn" data-sub="land">Land</button>
+    </div>
+
+    <!-- Car sub-filters -->
+    <div class="sub-filters-cars" id="subCars">
+      <button class="filter-btn active" data-sub="all">All</button>
+      <button class="filter-btn" data-sub="car-new">Brand New</button>
+      <button class="filter-btn" data-sub="car-used">Foreign Used</button>
+      <button class="filter-btn" data-sub="car-hire">For Hire</button>
+      <button class="filter-btn" data-sub="sedan">Sedan</button>
+      <button class="filter-btn" data-sub="suv">SUV</button>
+      <button class="filter-btn" data-sub="truck">Truck / Van</button>
+      <button class="filter-btn" data-sub="luxury">Luxury</button>
+    </div>
+
+    <div class="filter-search">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Search listings..."/>
+    </div>
+  </div>
+</div>
+
+<!-- LISTINGS -->
+<section id="listings">
+
+  <div class="listings-meta reveal">
+    <p class="listings-count">Showing <strong id="countDisplay">18</strong> listings</p>
+    <select class="sort-select" id="sortSelect">
+      <option value="default">Sort: Default</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="newest">Newest First</option>
+    </select>
+  </div>
+
+  <!-- ═══ PROPERTIES DIVIDER ═══ -->
+  <div class="section-divider" id="propDivider">
+    <h2>🏠 <em>Properties</em></h2>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="listings-grid" id="listingsGrid">
+
+    <!-- ── PROPERTY CARDS ── -->
+  
+
+    <div class="item-card reveal" data-cat="property" data-sub="lease commercial" data-price="12000000" data-date="2">
+      <div class="item-img-wrap">
+        <img class="item-img" src="imgaes/Land/Abuja_landP1.jpeg" alt="Commercial Office"/>
+        <span class="item-badge badge-lease">For Sale</span>
+        <span class="item-tag">Commercial</span>
+      </div>
+      <div class="item-body">
+        <h3>LAND FOR SALE IN ABUJA NIGERIA</h3>
+        <p class="item-sub">📍 Kuje, Abuja</p>
+        <div class="item-features">
+          <span class="item-feat">🏢 R of O</span>
+          <span class="item-feat">🚗 Parking</span>
+          <span class="item-feat">📐 1 Hectare</span>
+        </div>
+        <div class="item-footer">
+          <div class="item-price">₦60,000,000 <small>Per Annum</small></div>
+          <a href="index.html#contact" class="item-enquire">Enquire</a>
+          <a href="index.html#contact" class="item-enquire">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    
+
+    <div class="item-card reveal" data-cat="property" data-sub="land sale" data-price="18000000" data-date="4">
+      <div class="item-img-wrap">
+        <img class="item-img" src="imgaes/Land/LandBenue1.jpeg" alt="Land"/>
+        <span class="item-badge badge-sale">For Sale</span>
+        <span class="item-tag">Land</span>
+      </div>
+      <div class="item-body">
+        <h3>LAND FOR SALE IN MAKURDI BENUE STATE </h3>
+        <p class="item-sub">📍  Yaikyo , off Sule Abenga Road Mkd</p>
+        <div class="item-features">
+          <span class="item-feat">100 x 100</span>
+          <span class="item-feat">📄 C of O</span>
+          <span class="item-feat">🛣 6 plots from main road</span>
+        </div>
+        <div class="item-footer">
+          <div class="item-price">₦8,500,000 <small>Asking Price</small></div>
+          <a href="index.html#contact" class="item-enquire">Enquire</a>
+          <a href="listing-detail.html" class="item-enquire">View Details</a>
+        </div>
+      </div>
+    </div>
+    <div class="item-card reveal" data-cat="property" data-sub="land sale" data-price="18000000" data-date="4">
+      <div class="item-img-wrap">
+        <img class="item-img" src="imgaes/Land/landBm1.jpeg" alt="Land"/>
+        <span class="item-badge badge-sale">For Sale</span>
+        <span class="item-tag">Land</span>
+      </div>
+      <div class="item-body">
+        <h3>LAND FOR SALE IN MAKURDI BENUE STATE  </h3>
+        <p class="item-sub">📍Makurdi, Benue state</p>
+        <div class="item-features">
+          <span class="item-feat">📐 100 x 100</span>
+          <span class="item-feat">📄 R of O</span>
+          <span class="item-feat">🛣 Road Access</span>
+        </div>
+        <div class="item-footer">
+          <div class="item-price">₦60,000,000 <small>Asking Price</small></div>
+          <a href="index.html#contact" class="item-enquire">Enquire</a>
+          <a href="listing-detail.html" class="item-enquire">View Details</a>
+        </div>
+      </div>
+    </div>
+<div class="item-card reveal" data-cat="property" data-sub="land sale" data-price="18000000" data-date="4">
+      <div class="item-img-wrap">
+        <img class="item-img" src="imgaes/Land/Lnadmakt1.jpeg" alt="Land"/>
+        <span class="item-badge badge-sale">For Sale</span>
+        <span class="item-tag">Land</span>
+      </div>
+      <div class="item-body">
+        <h3>LAND FOR SALE IN MAKURDI BENUE STATE .</h3>
+        <p class="item-sub">📍 CBN layout Makurdi.</p>
+        <div class="item-features">
+          <span class="item-feat">📐 100ft x 100ft</span>
+          <span class="item-feat">📄 C of O</span>
+          <span class="item-feat">🛣 Road Access</span>
+        </div>
+        <div class="item-footer">
+          <div class="item-price">₦23,000,000 <small>Asking Price</small></div>
+          <a href="index.html#contact" class="item-enquire">Enquire</a>
+          <a href="listing-detail.html" class="item-enquire">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-card reveal" data-cat="property" data-sub="new sale residential" data-price="75000000" data-date="10">
+      <div class="item-img-wrap">
+        <img class="item-img" src="imgaes/House/HouseMak.jpeg" alt="Semi Detached"/>
+        <span class="item-badge badge-new">New Listing</span>
+        <span class="item-tag">Residential</span>
+      </div>
+      <div class="item-body">
+        <h3>4 bedroom bungalow</h3>
+        <p class="item-sub">📍 Off George Akume road, Behind Catholic Youth centre, Makurdi </p>
+        <div class="item-features">
+          <span class="item-feat">🛏 4 Beds</span>
+          <span class="item-feat">🚿 4 Baths</span>
+          <span class="item-feat">📐 340 m²</span>
+        </div>
+        <div class="item-footer">
+          <div class="item-price">₦57,000,000 <small>Asking Price</small></div>
+          <a href="index.html#contact" class="item-enquire">Enquire</a> 
+          <a href="listing-detail.html" class="item-enquire">View Details</a>
+        </div>
+      </div>
+    </div>
+  <div class="item-card reveal" data-cat="property" data-sub="new sale residential" data-price="75000000" data-date="10">
+      <div class="item-img-wrap">
+        <img class="item-img" src="imgaes/Land/RareOp1.jpeg" alt="Estate"/>
+        <span class="item-badge badge-new">New Listing</span>
+        <span class="item-tag">Residential</span>
+      </div>
+      <div class="item-body">
+        <h3> 15 Units of 3 Bedrooms Estate for sale</h3>
+        <p class="item-sub">📍  HUDCO Quarters, By BIPC Quarters Court 5 North Bank Makurdi Benue State  </p>
+        <div class="item-features">
+          <span class="item-feat">🛏 3 Beds</span>
+          <span class="item-feat">🛏 15 Units</span>
+          <span class="item-feat">📐 10 plots</span>
+        </div>
+        <div class="item-footer">
+          <div class="item-price">₦110,000,000 <small>Asking Price %5 proffesional fee</small></div>
+          <a href="index.html#contact" class="item-enquire">Enquire</a> 
+          <a href="listing-detail.html" class="item-enquire">View Details</a>
+        </div>
+      </div>
+    </div>
+
+  
+
+    
+
+    <!-- ── CAR CARDS ── -->
+    <div class="item-card reveal" data-cat="car" data-sub="car-used suv" data-price="18500000" data-date="13">
+      <div class="item-img-wrap">
+        <img class="item-img" src="imgaes/cars/camary6.jpeg" alt="Toyota Landcruiser"/>
+        <span class="item-badge badge-used"> Used</span>
+        <span class="item-tag">Sedan</span>
+      </div>
+      <div class="item-body">
+        <h3>2007 model Toyota Corolla </h3>
+        <p class="item-sub">🚗 2007 · Automatic · Petrol</p>
+        <div class="item-features">
+          <span class="item-feat">📍 Makurdi</span>
+          <span class="item-feat">🛣 45,000 km</span>
+          <span class="item-feat">⚙️ 4WD</span>
+        </div>
+        <div class="item-footer">
+          <div class="item-price">₦2,900,000 <small>Asking Price Buyers settle: ₦100,000</small></div>
+          <a href="index.html#contact" class="item-enquire">Enquire</a>
+          <a href="listing-detail.html" class="item-enquire">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-card reveal" data-cat="car" data-sub="car-new sedan luxury" data-price="28000000" data-date="14">
+      <div class="item-img-wrap">
+        <img class="item-img" src="imgaes/cars/Hondap1.jpeg" alt="Mercedes Benz"/>
+        <span class="item-badge badge-new">Used</span>
+        <span class="item-tag">Sedan</span>
+      </div>
+      <div class="item-body">
+        <h3>Honda Hynessy</h3>
+        <p class="item-sub">🚗 · Automatic · Petrol</p>
+        <div class="item-features">
+          <span class="item-feat">📍 Port Harcourt</span>
+          <span class="item-feat">🛣 45,000 km</span>
+          <span class="item-feat">✅ Full Option</span>
+        </div>
+        <div class="item-footer">
+          <div class="item-price">₦2,000,000 <small>Asking Price Buyers settle: ₦50,000</small></div>
+          <a href="index.html#contact" class="item-enquire">Enquire</a>
+          <a href="listing-detail.html" class="item-enquire">View Details</a>
+        </div>
+      </div>
+    </div>
+
+    
+
+    
+  </div><!-- /listings-grid -->
+
+  <!-- Cars section divider (hidden until cars tab active) -->
+  <div class="section-divider" id="carDivider" style="display:none;">
+    <h2>🚗 <em>Automobiles</em></h2>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- No results -->
+  <div class="no-results" id="noResults">
+    <span class="nr-icon">🔍</span>
+    <p>No listings match your search. Try a different filter or keyword.</p>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination">
+    <button class="page-btn">←</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">→</button>
+  </div>
+
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <span>Can't Find What You Need?</span>
+  <h2>Let Us Source Your <em>Perfect Match</em></h2>
+  <p>Tell us exactly what you're looking for — property location, budget, car model — and our team will find it for you.</p>
+  <div class="cta-btns">
+    <a href="index.html#contact" class="btn-primary">Contact Our Team</a>
+    <a href="index.html#services" class="btn-ghost">Our Services</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">Orema <span>Global</span></a>
+      <p>A premier multi-service company delivering excellence in real estate, automobiles, logistics, cleaning, project management and more across Nigeria.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="index.html#services">Real Estate</a></li>
+        <li><a href="index.html#services">Automobile</a></li>
+        <li><a href="index.html#services">Logistics</a></li>
+        <li><a href="index.html#services">Industrial Cleaning</a></li>
+        <li><a href="index.html#services">Project Management</a></li>
+        <li><a href="index.html#services">Estate Survey</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="properties.html">All Listings</a></li>
+        <li><a href="index.html#testimonials">Testimonials</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="tel:+2348000000000">+234 8105863980 </a></li>
+        <li><a href="mailto:info@oremaglobalservices.com">oremaproperty@yahoo.com</a></li>
+        <li><a href="index.html#contact">Makurdi 970101, Benue state</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Orema Global Services. All rights reserved.</span>
+    <span>Designed with excellence in mind.</span>
+  </div>
+</footer>
+
+<script>
+  // ── NAV SCROLL
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60));
+
+  // ── HAMBURGER
+  document.getElementById('hamburger').onclick = () => document.getElementById('mobileMenu').classList.add('open');
+  document.getElementById('mobileClose').onclick = () => document.getElementById('mobileMenu').classList.remove('open');
+  document.querySelectorAll('.mob-link').forEach(l => l.addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open')));
+
+  // ── REVEAL
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach((e,i) => { if(e.isIntersecting) setTimeout(()=>e.target.classList.add('visible'), i*70); });
+  }, { threshold:0.08 });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // ── STATE
+  const allCards = Array.from(document.querySelectorAll('.item-card'));
+  let activeCat = 'all';   // all | property | car
+  let activeSub = 'all';   // sub-filter value
+  let searchTerm = '';
+
+  const propDivider = document.getElementById('propDivider');
+  const carDivider  = document.getElementById('carDivider');
+  const subProp     = document.getElementById('subProp');
+  const subCars     = document.getElementById('subCars');
+  const countDisplay = document.getElementById('countDisplay');
+  const noResults    = document.getElementById('noResults');
+
+  // update tab counts
+  function updateTabCounts() {
+    const total = allCards.filter(c => matchesSearch(c)).length;
+    const props = allCards.filter(c => c.dataset.cat === 'property' && matchesSearch(c)).length;
+    const cars  = allCards.filter(c => c.dataset.cat === 'car'      && matchesSearch(c)).length;
+    document.getElementById('count-all').textContent      = total;
+    document.getElementById('count-property').textContent = props;
+    document.getElementById('count-car').textContent      = cars;
+  }
+
+  function matchesSearch(card) {
+    if (!searchTerm) return true;
+    const h = card.querySelector('h3').textContent.toLowerCase();
+    const s = card.querySelector('.item-sub').textContent.toLowerCase();
+    return h.includes(searchTerm) || s.includes(searchTerm);
+  }
+
+  function updateDisplay() {
+    let visible = 0;
+    allCards.forEach(card => {
+      const cat = card.dataset.cat;
+      const subs = card.dataset.sub || '';
+      const catMatch = activeCat === 'all' || cat === activeCat;
+      const subMatch = activeSub === 'all' || subs.includes(activeSub);
+      const srchMatch = matchesSearch(card);
+      const show = catMatch && subMatch && srchMatch;
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+
+    countDisplay.textContent = visible;
+    noResults.classList.toggle('show', visible === 0);
+
+    // dividers
+    if (activeCat === 'all') {
+      propDivider.style.display = '';
+      carDivider.style.display = 'none'; // inline when cat===all, cars flow after props naturally
+    } else if (activeCat === 'property') {
+      propDivider.style.display = '';
+      carDivider.style.display = 'none';
+    } else {
+      propDivider.style.display = 'none';
+      carDivider.style.display = '';
+    }
+
+    updateTabCounts();
+  }
+
+  // ── CATEGORY TABS
+  document.querySelectorAll('.cat-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeCat = tab.dataset.cat;
+      activeSub = 'all';
+
+      // swap sub-filter rows
+      if (activeCat === 'car') {
+        subProp.style.display = 'none';
+        subCars.style.display = 'flex';
+      } else {
+        subProp.style.display = 'flex';
+        subCars.style.display = 'none';
+      }
+
+      // reset sub-filter buttons
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      const firstBtn = activeCat === 'car'
+        ? subCars.querySelector('[data-sub="all"]')
+        : subProp.querySelector('[data-sub="all"]');
+      if (firstBtn) firstBtn.classList.add('active');
+
+      updateDisplay();
+    });
+  });
+
+  // ── SUB-FILTERS (both rows)
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      // only deactivate buttons in the same row
+      const row = btn.closest('.sub-filters-prop, .sub-filters-cars');
+      row.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeSub = btn.dataset.sub;
+      updateDisplay();
+    });
+  });
+
+  // ── SEARCH
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchTerm = e.target.value.toLowerCase().trim();
+    updateDisplay();
+  });
+
+  // ── SORT
+  document.getElementById('sortSelect').addEventListener('change', function() {
+    const grid = document.getElementById('listingsGrid');
+    const visible = allCards.filter(c => !c.classList.contains('hidden'));
+    visible.sort((a,b) => {
+      if (this.value === 'price-asc')  return +a.dataset.price - +b.dataset.price;
+      if (this.value === 'price-desc') return +b.dataset.price - +a.dataset.price;
+      if (this.value === 'newest')     return +b.dataset.date  - +a.dataset.date;
+      return +a.dataset.date - +b.dataset.date;
+    });
+    visible.forEach(c => grid.appendChild(c));
+  });
+
+  // init counts
+  updateTabCounts();
+</script>
+</body>
+</html>
